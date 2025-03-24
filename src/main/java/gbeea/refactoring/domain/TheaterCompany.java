@@ -6,8 +6,6 @@ import java.util.Locale;
 
 public class TheaterCompany {
 
-    private static final NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
-
     public String statement(Invoice invoice, List<Play> plays) {
         int totalAmount = 0;
         int volumeCredits = 0;
@@ -16,20 +14,20 @@ public class TheaterCompany {
         for (Performance performance : invoice.getPerformances()) {
             volumeCredits += volumeCreditsFor(plays, performance);
 
-            result += " " + playFor(plays, performance).getName() + ": " + numberFormat.format(amountFor(plays, performance) / 100) + " (" + performance.getAudience() + "석)\n";
+            result += " " + playFor(plays, performance).getName() + ": " + usd(amountFor(plays, performance)) + " (" + performance.getAudience() + "석)\n";
             totalAmount += amountFor(plays, performance);
         }
-        result += "총액: " + numberFormat.format(totalAmount / 100) + "\n";
+        result += "총액: " + usd(totalAmount) + "\n";
         result += "적립 포인트: " + volumeCredits + "점\n";
         return result;
     }
 
-    private int volumeCreditsFor(List<Play> plays, Performance performance) {
-        int volumeCredits = Math.max(performance.getAudience() - 30, 0);
-        if ("comedy".equals(playFor(plays, performance).getType())) {
-            volumeCredits += performance.getAudience() / 5;
+    private int volumeCreditsFor(List<Play> plays, Performance aPerformance) {
+        int result = Math.max(aPerformance.getAudience() - 30, 0);
+        if ("comedy".equals(playFor(plays, aPerformance).getType())) {
+            result += aPerformance.getAudience() / 5;
         }
-        return volumeCredits;
+        return result;
     }
 
     private Play playFor(List<Play> plays, Performance aPerformance) {
@@ -37,6 +35,11 @@ public class TheaterCompany {
                 .filter(p -> aPerformance.getPlayId().equals(p.getId()))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    private String usd(int aNumber) {
+        return NumberFormat.getCurrencyInstance(Locale.US)
+                .format(aNumber / 100);
     }
 
     private int amountFor(List<Play> plays, Performance aPerformance) {
