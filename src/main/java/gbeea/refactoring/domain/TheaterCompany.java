@@ -7,31 +7,12 @@ import java.util.Locale;
 public class TheaterCompany {
 
     public String statement(Invoice invoice, List<Play> plays) {
-        int totalAmount = 0;
         String result = "청구 내역 (고객명: " + invoice.getCustomer() + ")\n";
-
         for (Performance performance : invoice.getPerformances()) {
             result += " " + playFor(plays, performance).getName() + ": " + usd(amountFor(plays, performance)) + " (" + performance.getAudience() + "석)\n";
-            totalAmount += amountFor(plays, performance);
         }
-        result += "총액: " + usd(totalAmount) + "\n";
+        result += "총액: " + usd(totalAmount(invoice, plays)) + "\n";
         result += "적립 포인트: " + totalVolumeCredits(invoice, plays) + "점\n";
-        return result;
-    }
-
-    private int totalVolumeCredits(Invoice invoice, List<Play> plays) {
-        int result = 0;
-        for (Performance performance : invoice.getPerformances()) {
-            result += volumeCreditsFor(plays, performance);
-        }
-        return result;
-    }
-
-    private int volumeCreditsFor(List<Play> plays, Performance aPerformance) {
-        int result = Math.max(aPerformance.getAudience() - 30, 0);
-        if ("comedy".equals(playFor(plays, aPerformance).getType())) {
-            result += aPerformance.getAudience() / 5;
-        }
         return result;
     }
 
@@ -40,11 +21,6 @@ public class TheaterCompany {
                 .filter(p -> aPerformance.getPlayId().equals(p.getId()))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
-    }
-
-    private String usd(int aNumber) {
-        return NumberFormat.getCurrencyInstance(Locale.US)
-                .format(aNumber / 100);
     }
 
     private int amountFor(List<Play> plays, Performance aPerformance) {
@@ -65,6 +41,35 @@ public class TheaterCompany {
                 break;
             default:
                 throw new IllegalArgumentException("알 수 없는 장르: " + playFor(plays, aPerformance).getName());
+        }
+        return result;
+    }
+
+    private String usd(int aNumber) {
+        return NumberFormat.getCurrencyInstance(Locale.US)
+                .format(aNumber / 100);
+    }
+
+    private int totalAmount(Invoice invoice, List<Play> plays) {
+        int result = 0;
+        for (Performance performance : invoice.getPerformances()) {
+            result += amountFor(plays, performance);
+        }
+        return result;
+    }
+
+    private int totalVolumeCredits(Invoice invoice, List<Play> plays) {
+        int result = 0;
+        for (Performance performance : invoice.getPerformances()) {
+            result += volumeCreditsFor(plays, performance);
+        }
+        return result;
+    }
+
+    private int volumeCreditsFor(List<Play> plays, Performance aPerformance) {
+        int result = Math.max(aPerformance.getAudience() - 30, 0);
+        if ("comedy".equals(playFor(plays, aPerformance).getType())) {
+            result += aPerformance.getAudience() / 5;
         }
         return result;
     }
