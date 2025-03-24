@@ -8,17 +8,22 @@ public class TheaterCompany {
 
     public String statement(Invoice invoice, List<Play> plays) {
         int totalAmount = 0;
-        int volumeCredits = 0;
         String result = "청구 내역 (고객명: " + invoice.getCustomer() + ")\n";
 
         for (Performance performance : invoice.getPerformances()) {
-            volumeCredits += volumeCreditsFor(plays, performance);
-
             result += " " + playFor(plays, performance).getName() + ": " + usd(amountFor(plays, performance)) + " (" + performance.getAudience() + "석)\n";
             totalAmount += amountFor(plays, performance);
         }
         result += "총액: " + usd(totalAmount) + "\n";
-        result += "적립 포인트: " + volumeCredits + "점\n";
+        result += "적립 포인트: " + totalVolumeCredits(invoice, plays) + "점\n";
+        return result;
+    }
+
+    private int totalVolumeCredits(Invoice invoice, List<Play> plays) {
+        int result = 0;
+        for (Performance performance : invoice.getPerformances()) {
+            result += volumeCreditsFor(plays, performance);
+        }
         return result;
     }
 
