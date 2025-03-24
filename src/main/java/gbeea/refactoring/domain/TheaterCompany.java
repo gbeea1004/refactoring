@@ -14,8 +14,6 @@ public class TheaterCompany {
         String result = "청구 내역 (고객명: " + invoice.getCustomer() + ")\n";
 
         for (Performance performance : invoice.getPerformances()) {
-            int thisAmount = amountFor(plays, performance);
-
             // 포인트 적립
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
             // 추가 포인트 적립
@@ -23,8 +21,8 @@ public class TheaterCompany {
                 volumeCredits += performance.getAudience() / 5;
             }
 
-            result += " " + playFor(plays, performance).getName() + ": " + numberFormat.format(thisAmount / 100) + " (" + performance.getAudience() + "석)\n";
-            totalAmount += thisAmount;
+            result += " " + playFor(plays, performance).getName() + ": " + numberFormat.format(amountFor(plays, performance) / 100) + " (" + performance.getAudience() + "석)\n";
+            totalAmount += amountFor(plays, performance);
         }
         result += "총액: " + numberFormat.format(totalAmount / 100) + "\n";
         result += "적립 포인트: " + volumeCredits + "점\n";
