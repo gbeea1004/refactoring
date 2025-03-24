@@ -14,10 +14,7 @@ public class TheaterCompany {
         String result = "청구 내역 (고객명: " + invoice.getCustomer() + ")\n";
 
         for (Performance performance : invoice.getPerformances()) {
-            Play play = plays.stream()
-                    .filter(p -> performance.getPlayId().equals(p.getId()))
-                    .findFirst()
-                    .orElseThrow(IllegalArgumentException::new);
+            Play play = playFor(plays, performance);
             int thisAmount = amountFor(performance, play);
 
             // 포인트 적립
@@ -35,25 +32,32 @@ public class TheaterCompany {
         return result;
     }
 
-    private int amountFor(Performance performance, Play play) {
-        int thisAmount;
+    private Play playFor(List<Play> plays, Performance performance) {
+        return plays.stream()
+                .filter(p -> performance.getPlayId().equals(p.getId()))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    private int amountFor(Performance aPerformance, Play play) {
+        int result;
         switch (play.getType()) {
             case "tragedy":
-                thisAmount = 40000;
-                if (performance.getAudience() > 30) {
-                    thisAmount += 1000 * (performance.getAudience() - 30);
+                result = 40000;
+                if (aPerformance.getAudience() > 30) {
+                    result += 1000 * (aPerformance.getAudience() - 30);
                 }
                 break;
             case "comedy":
-                thisAmount = 30000;
-                if (performance.getAudience() > 20) {
-                    thisAmount += 10000 + 500 * (performance.getAudience() - 20);
+                result = 30000;
+                if (aPerformance.getAudience() > 20) {
+                    result += 10000 + 500 * (aPerformance.getAudience() - 20);
                 }
-                thisAmount += 300 * performance.getAudience();
+                result += 300 * aPerformance.getAudience();
                 break;
             default:
                 throw new IllegalArgumentException("알 수 없는 장르: " + play.getName());
         }
-        return thisAmount;
+        return result;
     }
 }
