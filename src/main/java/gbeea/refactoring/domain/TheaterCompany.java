@@ -7,16 +7,18 @@ import java.util.Locale;
 public class TheaterCompany {
 
     public String statement(Invoice invoice, List<Play> plays) {
-        return renderPlainText(invoice, plays);
+        StatementData statementData = new StatementData(invoice, plays);
+
+        return renderPlainText(statementData, plays);
     }
 
-    private String renderPlainText(Invoice invoice, List<Play> plays) {
-        String result = "청구 내역 (고객명: " + invoice.getCustomer() + ")\n";
-        for (Performance performance : invoice.getPerformances()) {
-            result += " " + playFor(plays, performance).getName() + ": " + usd(amountFor(plays, performance)) + " (" + performance.getAudience() + "석)\n";
+    private String renderPlainText(StatementData data, List<Play> plays) {
+        String result = "청구 내역 (고객명: " + data.getCustomer() + ")\n";
+        for (Performance performance : data.getPerformances()) {
+            result += " " + data.getPlay(performance).getName() + ": " + usd(data.getAmount(performance)) + " (" + performance.getAudience() + "석)\n";
         }
-        result += "총액: " + usd(totalAmount(invoice, plays)) + "\n";
-        result += "적립 포인트: " + totalVolumeCredits(invoice, plays) + "점\n";
+        result += "총액: " + usd(totalAmount(data)) + "\n";
+        result += "적립 포인트: " + totalVolumeCredits(data, plays) + "점\n";
         return result;
     }
 
@@ -54,17 +56,17 @@ public class TheaterCompany {
                 .format(aNumber / 100);
     }
 
-    private int totalAmount(Invoice invoice, List<Play> plays) {
+    private int totalAmount(StatementData data) {
         int result = 0;
-        for (Performance performance : invoice.getPerformances()) {
-            result += amountFor(plays, performance);
+        for (Performance performance : data.getPerformances()) {
+            result += data.getAmount(performance);
         }
         return result;
     }
 
-    private int totalVolumeCredits(Invoice invoice, List<Play> plays) {
+    private int totalVolumeCredits(StatementData data, List<Play> plays) {
         int result = 0;
-        for (Performance performance : invoice.getPerformances()) {
+        for (Performance performance : data.getPerformances()) {
             result += volumeCreditsFor(plays, performance);
         }
         return result;
