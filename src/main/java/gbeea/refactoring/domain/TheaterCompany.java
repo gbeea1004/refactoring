@@ -7,6 +7,10 @@ import java.util.Locale;
 public class TheaterCompany {
 
     public String statement(Invoice invoice, List<Play> plays) {
+        return renderPlainText(invoice, plays);
+    }
+
+    private String renderPlainText(Invoice invoice, List<Play> plays) {
         String result = "청구 내역 (고객명: " + invoice.getCustomer() + ")\n";
         for (Performance performance : invoice.getPerformances()) {
             result += " " + playFor(plays, performance).getName() + ": " + usd(amountFor(plays, performance)) + " (" + performance.getAudience() + "석)\n";
