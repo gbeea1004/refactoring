@@ -9,7 +9,11 @@ public class StatementData {
     private final List<Performance> performances;
     private final List<Play> plays;
 
-    public StatementData(Invoice invoice, List<Play> plays) {
+    public static StatementData of(Invoice invoice, List<Play> plays) {
+        return new StatementData(invoice, plays);
+    }
+
+    private StatementData(Invoice invoice, List<Play> plays) {
         this.customer = invoice.getCustomer();
         this.performances = new ArrayList<>(invoice.getPerformances());
         this.plays = new ArrayList<>(plays);

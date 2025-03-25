@@ -7,9 +7,7 @@ import java.util.Locale;
 public class TheaterCompany {
 
     public String statement(Invoice invoice, List<Play> plays) {
-        StatementData statementData = new StatementData(invoice, plays);
-
-        return renderPlainText(statementData);
+        return renderPlainText(StatementData.of(invoice, plays));
     }
 
     private String renderPlainText(StatementData data) {
