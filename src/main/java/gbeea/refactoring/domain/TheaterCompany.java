@@ -22,61 +22,8 @@ public class TheaterCompany {
         return result;
     }
 
-    private Play playFor(List<Play> plays, Performance aPerformance) {
-        return plays.stream()
-                .filter(p -> aPerformance.getPlayId().equals(p.getId()))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-    }
-
-    private int amountFor(List<Play> plays, Performance aPerformance) {
-        int result;
-        switch (playFor(plays, aPerformance).getType()) {
-            case "tragedy":
-                result = 40000;
-                if (aPerformance.getAudience() > 30) {
-                    result += 1000 * (aPerformance.getAudience() - 30);
-                }
-                break;
-            case "comedy":
-                result = 30000;
-                if (aPerformance.getAudience() > 20) {
-                    result += 10000 + 500 * (aPerformance.getAudience() - 20);
-                }
-                result += 300 * aPerformance.getAudience();
-                break;
-            default:
-                throw new IllegalArgumentException("알 수 없는 장르: " + playFor(plays, aPerformance).getName());
-        }
-        return result;
-    }
-
     private String usd(int aNumber) {
         return NumberFormat.getCurrencyInstance(Locale.US)
                 .format(aNumber / 100);
-    }
-
-    private int totalAmount(StatementData data) {
-        int result = 0;
-        for (Performance performance : data.getPerformances()) {
-            result += data.getAmount(performance);
-        }
-        return result;
-    }
-
-    private int totalVolumeCredits(StatementData data, List<Play> plays) {
-        int result = 0;
-        for (Performance performance : data.getPerformances()) {
-            result += volumeCreditsFor(plays, performance);
-        }
-        return result;
-    }
-
-    private int volumeCreditsFor(List<Play> plays, Performance aPerformance) {
-        int result = Math.max(aPerformance.getAudience() - 30, 0);
-        if ("comedy".equals(playFor(plays, aPerformance).getType())) {
-            result += aPerformance.getAudience() / 5;
-        }
-        return result;
     }
 }
