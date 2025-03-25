@@ -44,9 +44,9 @@ public class StatementData {
         return result;
     }
 
-    public int totalVolumeCredits(StatementData data) {
+    public int totalVolumeCredits() {
         int result = 0;
-        for (Performance performance : data.getPerformances()) {
+        for (Performance performance : performances) {
             result += volumeCreditsFor(performance);
         }
         return result;
@@ -56,6 +56,14 @@ public class StatementData {
         int result = Math.max(aPerformance.getAudience() - 30, 0);
         if ("comedy".equals(getPlay(aPerformance).getType())) {
             result += aPerformance.getAudience() / 5;
+        }
+        return result;
+    }
+
+    public int totalAmount() {
+        int result = 0;
+        for (Performance performance : performances) {
+            result += getAmount(performance);
         }
         return result;
     }

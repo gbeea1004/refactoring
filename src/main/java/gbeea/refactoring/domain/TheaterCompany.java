@@ -9,16 +9,16 @@ public class TheaterCompany {
     public String statement(Invoice invoice, List<Play> plays) {
         StatementData statementData = new StatementData(invoice, plays);
 
-        return renderPlainText(statementData, plays);
+        return renderPlainText(statementData);
     }
 
-    private String renderPlainText(StatementData data, List<Play> plays) {
+    private String renderPlainText(StatementData data) {
         String result = "청구 내역 (고객명: " + data.getCustomer() + ")\n";
         for (Performance performance : data.getPerformances()) {
             result += " " + data.getPlay(performance).getName() + ": " + usd(data.getAmount(performance)) + " (" + performance.getAudience() + "석)\n";
         }
-        result += "총액: " + usd(totalAmount(data)) + "\n";
-        result += "적립 포인트: " + data.totalVolumeCredits(data) + "점\n";
+        result += "총액: " + usd(data.totalAmount()) + "\n";
+        result += "적립 포인트: " + data.totalVolumeCredits() + "점\n";
         return result;
     }
 
