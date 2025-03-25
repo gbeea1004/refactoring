@@ -20,6 +20,24 @@ public class TheaterCompany {
         return result;
     }
 
+    public String htmlStatement(Invoice invoice, List<Play> plays) {
+        return renderHtml(StatementData.of(invoice, plays));
+    }
+
+    private String renderHtml(StatementData data) {
+        String result = "<h1>청구 내역 (고객명: " + data.getCustomer() + ")</h1>\n";
+        result += "<table>\n";
+        result += "  <tr>\n    <th>연극</th>\n    <th>죄석 수</th>\n    <th>금액</th>\n  </tr>\n";
+        for (Performance performance : data.getPerformances()) {
+            result += "  <tr>\n    <td>" + data.getPlay(performance).getName() + "</td>\n    <td>(" + performance.getAudience() + "석)</td>\n";
+            result += "    <td>" + usd(data.getAmount(performance)) + "</td>\n  </tr>\n";
+        }
+        result += "</table>\n";
+        result += "<p>총액: <em>" + usd(data.totalAmount()) + "</em></p>\n";
+        result += "<p>적립 포인트: <em>" + data.totalVolumeCredits() + "</em>점</p>\n";
+        return result;
+    }
+
     private String usd(int aNumber) {
         return NumberFormat.getCurrencyInstance(Locale.US)
                 .format(aNumber / 100);
