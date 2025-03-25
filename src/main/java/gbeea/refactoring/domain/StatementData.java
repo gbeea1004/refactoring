@@ -45,11 +45,9 @@ public class StatementData {
     }
 
     public int totalVolumeCredits() {
-        int result = 0;
-        for (Performance performance : performances) {
-            result += volumeCreditsFor(performance);
-        }
-        return result;
+        return performances.stream()
+                .mapToInt(this::volumeCreditsFor)
+                .sum();
     }
 
     private int volumeCreditsFor(Performance aPerformance) {
@@ -61,11 +59,9 @@ public class StatementData {
     }
 
     public int totalAmount() {
-        int result = 0;
-        for (Performance performance : performances) {
-            result += getAmount(performance);
-        }
-        return result;
+        return performances.stream()
+                .mapToInt(this::getAmount)
+                .sum();
     }
 
     public String getCustomer() {
