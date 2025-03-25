@@ -18,7 +18,7 @@ public class TheaterCompany {
             result += " " + data.getPlay(performance).getName() + ": " + usd(data.getAmount(performance)) + " (" + performance.getAudience() + "석)\n";
         }
         result += "총액: " + usd(totalAmount(data)) + "\n";
-        result += "적립 포인트: " + totalVolumeCredits(data, plays) + "점\n";
+        result += "적립 포인트: " + data.totalVolumeCredits(data) + "점\n";
         return result;
     }
 
