@@ -13,10 +13,10 @@ public class TheaterCompany {
     private String renderPlainText(StatementData data) {
         String result = "청구 내역 (고객명: " + data.getCustomer() + ")\n";
         for (Performance performance : data.getPerformances()) {
-            result += " " + data.getPlay(performance).getName() + ": " + usd(data.getAmount(performance)) + " (" + performance.getAudience() + "석)\n";
+            result += " " + data.playFor(performance).getName() + ": " + usd(data.amountFor(performance)) + " (" + performance.getAudience() + "석)\n";
         }
-        result += "총액: " + usd(data.totalAmount()) + "\n";
-        result += "적립 포인트: " + data.totalVolumeCredits() + "점\n";
+        result += "총액: " + usd(data.getTotalAmount()) + "\n";
+        result += "적립 포인트: " + data.getTotalVolumeCredits() + "점\n";
         return result;
     }
 
@@ -29,12 +29,12 @@ public class TheaterCompany {
         result += "<table>\n";
         result += "  <tr>\n    <th>연극</th>\n    <th>죄석 수</th>\n    <th>금액</th>\n  </tr>\n";
         for (Performance performance : data.getPerformances()) {
-            result += "  <tr>\n    <td>" + data.getPlay(performance).getName() + "</td>\n    <td>(" + performance.getAudience() + "석)</td>\n";
-            result += "    <td>" + usd(data.getAmount(performance)) + "</td>\n  </tr>\n";
+            result += "  <tr>\n    <td>" + data.playFor(performance).getName() + "</td>\n    <td>(" + performance.getAudience() + "석)</td>\n";
+            result += "    <td>" + usd(data.amountFor(performance)) + "</td>\n  </tr>\n";
         }
         result += "</table>\n";
-        result += "<p>총액: <em>" + usd(data.totalAmount()) + "</em></p>\n";
-        result += "<p>적립 포인트: <em>" + data.totalVolumeCredits() + "</em>점</p>\n";
+        result += "<p>총액: <em>" + usd(data.getTotalAmount()) + "</em></p>\n";
+        result += "<p>적립 포인트: <em>" + data.getTotalVolumeCredits() + "</em>점</p>\n";
         return result;
     }
 
