@@ -2,12 +2,15 @@ package gbeea.refactoring.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StatementData {
 
     private final String customer;
     private final List<Performance> performances;
     private final List<Play> plays;
+    private final Map<Performance, PerformanceCalculator> calculators;
     private final int totalAmount;
     private final int totalVolumeCredits;
 
@@ -19,8 +22,16 @@ public class StatementData {
         this.customer = invoice.getCustomer();
         this.performances = new ArrayList<>(invoice.getPerformances());
         this.plays = new ArrayList<>(plays);
+        this.calculators = createCalculators(invoice.getPerformances());
         this.totalAmount = totalAmount();
         this.totalVolumeCredits = totalVolumeCredits();
+    }
+
+    private Map<Performance, PerformanceCalculator> createCalculators(List<Performance> performances) {
+        return performances.stream()
+                .collect(Collectors.toMap(
+                        performance -> performance,
+                        performance -> PerformanceCalculator.of(performance, playFor(performance))));
     }
 
     private int totalVolumeCredits() {
@@ -30,7 +41,7 @@ public class StatementData {
     }
 
     private int volumeCreditsFor(Performance aPerformance) {
-        return PerformanceCalculator.of(aPerformance, playFor(aPerformance)).getVolumeCredits();
+        return calculators.get(aPerformance).getVolumeCredits();
     }
 
     public Play playFor(Performance aPerformance) {
@@ -47,7 +58,7 @@ public class StatementData {
     }
 
     public int amountFor(Performance aPerformance) {
-        return PerformanceCalculator.of(aPerformance, playFor(aPerformance)).getAmount();
+        return calculators.get(aPerformance).getAmount();
     }
 
     public String getCustomer() {
