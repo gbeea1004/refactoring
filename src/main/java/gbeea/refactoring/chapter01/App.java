@@ -7,7 +7,7 @@ import gbeea.refactoring.chapter01.domain.TheaterCompany;
 
 import java.util.List;
 
-public class RefactoringApplication {
+public class App {
 
     public static void main(String[] args) {
         TheaterCompany company = new TheaterCompany();
