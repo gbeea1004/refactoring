@@ -1,9 +1,9 @@
-package gbeea.refactoring;
+package gbeea.refactoring.chapter01;
 
-import gbeea.refactoring.domain.Invoice;
-import gbeea.refactoring.domain.Performance;
-import gbeea.refactoring.domain.Play;
-import gbeea.refactoring.domain.TheaterCompany;
+import gbeea.refactoring.chapter01.domain.Invoice;
+import gbeea.refactoring.chapter01.domain.Performance;
+import gbeea.refactoring.chapter01.domain.Play;
+import gbeea.refactoring.chapter01.domain.TheaterCompany;
 
 import java.util.List;
 

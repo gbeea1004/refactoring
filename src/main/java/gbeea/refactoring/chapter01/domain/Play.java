@@ -1,4 +1,4 @@
-package gbeea.refactoring.domain;
+package gbeea.refactoring.chapter01.domain;
 
 public class Play {
 
